@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Editar empleado{% endblock %}
+
+{% block body %}
+    <h1>Editar empleado</h1>
+    {{ form_start(form) }}
+    <div>
+        {{ form_label(form.nombre) }}
+        {{ form_widget(form.nombre) }}
+    </div>
+    <br>
+    
+    <div>
+        {{ form_label(form.email) }}
+        {{ form_widget(form.email) }}
+    </div>
+    <br>
+
+    <div>
+        {{ form_label(form.area) }}
+        {{ form_widget(form.area) }}
+    </div>
+    <br>
+    
+    <div>
+        {{ form_label(form.sexo) }}
+        {{ form_widget(form.sexo) }}
+    </div>
+    <br>
+    
+    <div>
+        {{ form_label(form.descripcion) }}
+        {{ form_widget(form.descripcion) }}
+    </div>
+    <br>
+    
+    <div>
+        {{ form_label(form.boletin) }}
+        {{ form_widget(form.boletin) }}
+        <span>Suscribirse al boletín</span>
+    </div>
+    <br>
+    {{ form_end(form) }}
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Lista de roles{% endblock %}
+
+{% block body %}
+<h1>Lista de roles</h1>
+    <a href="{{ path('roles_new') }}">Crear</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rol in roles %}
+                <tr>
+                    <td>{{ rol.nombre }}</td>
+                    <td>
+                        <a href="{{ path('roles_edit', { 'id': rol.id }) }}">Editar</a>
+                    </td>
+                    <td>
+                        <a href="{{ path('roles_delete', { 'id': rol.id }) }}" onclick="return confirm('¿Estás seguro?');">Eliminar</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

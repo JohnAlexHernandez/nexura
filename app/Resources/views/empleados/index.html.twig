@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Lista de empleados{% endblock %}
+
+{% block body %}
+    <h1>Lista de empleados</h1>
+    <a href="{{ path('empleados_new') }}">Crear</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Sexo</th>
+                <th>Area</th>
+                <th>Boletin</th>
+                <th>Modificar</th>
+                <th>Eliminar</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for empleado in empleados %}
+                <tr>
+                    <td>{{ empleado.nombre }}</td>
+                    <td>{{ empleado.email }}</td>
+                    <td>{{ empleado.sexo }}</td>
+                    <td>{{ empleado.area.nombre }}</td>
+                    <td>{{ empleado.boletin }}</td>
+                    <td>
+                        <a href="{{ path('empleados_edit', { 'id': empleado.id }) }}">Editar</a>
+                    </td>
+                    <td>
+                        <a href="{{ path('empleados_delete', { 'id': empleado.id }) }}" onclick="return confirm('¿Estás seguro?');">Eliminar</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

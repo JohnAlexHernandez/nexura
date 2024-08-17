@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Editar rol{% endblock %}
+
+{% block body %}
+<h1>Editar rol</h1>
+    {{ form_start(form) }}
+    <div>
+        {{ form_label(form.nombre) }}
+        {{ form_widget(form.nombre) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

@@ -1,0 +1,22 @@
+# Dependencias
+/vendor/
+/node_modules/
+
+# Directorios de Symfony
+/var/
+/public/bundles/
+/public/media/
+/public/uploads/
+
+# Archivos de entorno
+/.env
+/.env.local
+/.env.*.local
+
+# Otros archivos generados
+/composer.lock
+/.idea/
+/.vscode/
+/.phpunit.result.cache
+/phpunit.xml
+
