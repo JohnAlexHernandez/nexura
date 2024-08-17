@@ -1,77 +1,41 @@
-Symfony Standard Edition
-========================
+Gestión de empleados
 
-**WARNING**: This distribution does not support Symfony 4. See the
-[Installing & Setting up the Symfony Framework][15] page to find a replacement
-that fits you best.
+App que permite la gestión de empleados, areas y roles 🚀
 
-Welcome to the Symfony Standard Edition - a fully-functional Symfony
-application that you can use as the skeleton for your new applications.
+Para obtener una copia del proyecto en funcionamiento en tu máquina local para propósitos de desarrollo y pruebas sigue las siguientes instrucciones:
 
-For details on how to download and get started with Symfony, see the
-[Installation][1] chapter of the Symfony Documentation.
+1. Abrir una terminal
 
-What's inside?
---------------
+2. Cambia el directorio de trabajo actual a la ubicación en donde quieres clonar el directorio.
 
-The Symfony Standard Edition is configured with the following defaults:
+3. Escribe git clone https://github.com/JohnAlexHernandez/nexura.git
 
-  * An AppBundle you can use to start coding;
+Pre-requisitos 📋
 
-  * Twig as the only configured template engine;
+PHP >= 5.5.9
+Composer 1.10.22
+Bootstrap v5.3.3
+MariaBD 10.1.29
+Xampp 7.2.0
 
-  * Doctrine ORM/DBAL;
+Para deplegar el proyecto sigue las siguientes instrucciones:
 
-  * Swiftmailer;
+Antes de iniciar la configuración del proyecto es necesario tener instalado y confurado un stack que incluya Apache, MySQL y PHP con las características defnidas en los pre-requisitos
 
-  * Annotations enabled for everything.
+1. Ubicado en el directorio raiz del proyecto ejecute el comando composer install para instalar todas las dependencias necesarias para el correcto funcionamiento del proyecto.
 
-It comes pre-configured with the following bundles:
+2. Instale bootstrap mediante el comando npm install bootstrap
 
-  * **FrameworkBundle** - The core Symfony framework bundle
+3. En seguida ejecute los comandos php bin/console doctrine:database:create y php bin/console doctrine:schema:update –force para crear y actualizar la base de datos
 
-  * [**SensioFrameworkExtraBundle**][6] - Adds several enhancements, including
-    template and routing annotation capability
+4. Iniciamos el servidor integrado de Symfony mediante el comando php bin/console server:run
 
-  * [**DoctrineBundle**][7] - Adds support for the Doctrine ORM
+3. Acceder a la ruta http://127.0.0.1:8000/empleados desde su navegador para visualizar la aplicación
 
-  * [**TwigBundle**][8] - Adds support for the Twig templating engine
+Construído con 🛠️
 
-  * [**SecurityBundle**][9] - Adds security by integrating Symfony's security
-    component
+    [Symfony](version 3.4) - Framework de PHP
 
-  * [**SwiftmailerBundle**][10] - Adds support for Swiftmailer, a library for
-    sending emails
+Autores ✒️
 
-  * [**MonologBundle**][11] - Adds support for Monolog, a logging library
-
-  * **WebProfilerBundle** (in dev/test env) - Adds profiling functionality and
-    the web debug toolbar
-
-  * **SensioDistributionBundle** (in dev/test env) - Adds functionality for
-    configuring and working with Symfony distributions
-
-  * [**SensioGeneratorBundle**][13] (in dev env) - Adds code generation
-    capabilities
-
-  * [**WebServerBundle**][14] (in dev env) - Adds commands for running applications
-    using the PHP built-in web server
-
-  * **DebugBundle** (in dev/test env) - Adds Debug and VarDumper component
-    integration
-
-All libraries and bundles included in the Symfony Standard Edition are
-released under the MIT or BSD license.
-
-Enjoy!
-
-[1]:  https://symfony.com/doc/3.4/setup.html
-[6]:  https://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/index.html
-[7]:  https://symfony.com/doc/3.4/doctrine.html
-[8]:  https://symfony.com/doc/3.4/templating.html
-[9]:  https://symfony.com/doc/3.4/security.html
-[10]: https://symfony.com/doc/3.4/email.html
-[11]: https://symfony.com/doc/3.4/logging.html
-[13]: https://symfony.com/doc/current/bundles/SensioGeneratorBundle/index.html
-[14]: https://symfony.com/doc/current/setup/built_in_web_server.html
-[15]: https://symfony.com/doc/current/setup.html
+    John Alexander Hernández - Creador - JohnAlexHernandez
