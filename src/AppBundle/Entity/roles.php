@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use AppBundle\Entity\empleados;
 
 /**
@@ -75,11 +76,21 @@ class roles
         return $this->nombre;
     }
 
-    public function getEmpleados(): ArrayCollection
+    /**
+     * @return Collection|empleados[]
+     */
+    public function getEmpleados(): Collection
     {
         return $this->empleados;
     }
 
+    /**
+     * addEmpleado
+     * 
+     * @param empleados $empleado
+     * 
+     * @return roles
+     */
     public function addEmpleado(empleados $empleado): self
     {
         if (!$this->empleados->contains($empleado)) {
@@ -90,6 +101,13 @@ class roles
         return $this;
     }
 
+    /**
+     * removeEmpleado
+     * 
+     * @param empleados $empleado
+     * 
+     * @return roles
+     */
     public function removeEmpleado(empleados $empleado): self
     {
         if ($this->empleados->contains($empleado)) {

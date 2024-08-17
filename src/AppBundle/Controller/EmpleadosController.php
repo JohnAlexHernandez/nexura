@@ -5,13 +5,15 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\areas;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\empleados;
+use AppBundle\Entity\roles;
 
 class EmpleadosController extends Controller
 {
@@ -36,10 +38,14 @@ class EmpleadosController extends Controller
         $empleado = new empleados();
         $form = $this->createFormBuilder($empleado)
             ->add('nombre', TextType::class, [
-                'label' => 'Nombre completo', 
+                'label' => 'Nombre completo *', 
+                'attr' => ['class' => 'form-control'],
+                'required' => false
             ])
             ->add('email', TextType::class, [
-                'label' => 'Correo electrónico', 
+                'label' => 'Correo electrónico *',
+                'attr' => ['class' => 'form-control'],
+                'required' => false
             ])
             ->add('sexo', ChoiceType::class, [
                 'choices'  => [
@@ -48,7 +54,10 @@ class EmpleadosController extends Controller
                 ],
                 'expanded' => true,
                 'multiple' => false,
-                'label' => 'Sexo',
+                'label' => 'Sexo *',
+                'required' => false,
+                'placeholder' => null,
+                'attr' => ['class' => 'form-check'],
             ])
             ->add('area', ChoiceType::class, [
                 'label' => 'Área',
@@ -58,15 +67,28 @@ class EmpleadosController extends Controller
                 },
                 'choice_value' => function ($area) {
                     return $area ? $area->getId() : '';
-                }])
+                },
+                'placeholder' => 'Selecciona un área',
+                'required' => false,
+                'attr' => ['class' => 'form-check'],
+                ])
             ->add('descripcion', TextareaType::class, [
-                'label' => 'Descripción', 
+                'label' => 'Descripción *', 
+                'attr' => ['class' => 'form-control'],
+                'required' => false
             ])
             ->add('boletin', CheckboxType::class, [
                 'label'    => false,
                 'required' => false,
             ])
-            ->add('save', SubmitType::class, array('label' => 'Guardar'))
+            ->add('roles', EntityType::class, [
+                'class' => roles::class,
+                'choice_label' => 'nombre',
+                'expanded' => true,
+                'multiple' => true,
+                'required' => false,
+                'attr' => ['class' => 'form-check'],
+            ])
             ->getForm();
 
         $form->handleRequest($request);
@@ -76,6 +98,8 @@ class EmpleadosController extends Controller
             $em->persist($empleado);
             $em->flush();
 
+            $this->addFlash('success', 'Empleado creado exitosamente.');
+
             return $this->redirectToRoute('empleados_index');
         }
 
@@ -84,6 +108,9 @@ class EmpleadosController extends Controller
         ));
     }
 
+    /**
+     * Función que obtiene las areas 
+     */
     private function getAreasChoices()
     {
         $em = $this->getDoctrine()->getManager();
@@ -106,15 +133,20 @@ class EmpleadosController extends Controller
         $empleado = $em->getRepository(empleados::class)->find($id);
 
         if (!$empleado) {
-            throw $this->createNotFoundException('Empleado no encontrado');
+            $this->addFlash('error', 'Empleado no encontrado.');
+            return $this->redirectToRoute('empleados_index');
         }
 
         $form = $this->createFormBuilder($empleado)
             ->add('nombre', TextType::class, [
-                'label' => 'Nombre completo',
+                'label' => 'Nombre completo *',
+                'attr' => ['class' => 'form-control'],
+                'required' => false
             ])
             ->add('email', TextType::class, [
-                'label' => 'Correo electrónico',
+                'label' => 'Correo electrónico *',
+                'attr' => ['class' => 'form-control'],
+                'required' => false
             ])
             ->add('sexo', ChoiceType::class, [
                 'choices'  => [
@@ -123,7 +155,10 @@ class EmpleadosController extends Controller
                 ],
                 'expanded' => true,
                 'multiple' => false,
-                'label' => 'Sexo',
+                'label' => 'Sexo *',
+                'required' => false,
+                'placeholder' => null,
+                'attr' => ['class' => 'form-check'],
             ])
             ->add('area', ChoiceType::class, [
                 'label' => 'Área',
@@ -135,17 +170,26 @@ class EmpleadosController extends Controller
                     return $area ? $area->getId() : '';
                 },
                 'placeholder' => 'Selecciona un área',
-            ])
+                'required' => false,
+                'attr' => ['class' => 'form-check'],
+                ])
             ->add('descripcion', TextareaType::class, [
-                'label' => 'Descripción',
+                'label' => 'Descripción *',
+                'attr' => ['class' => 'form-control'],
+                'required' => false
             ])
             ->add('boletin', CheckboxType::class, [
                 'label'    => false,
                 'required' => false,
                 'data'     => $empleado->getBoletin() ? true : false,
             ])
-            ->add('save', SubmitType::class, [
-                'label' => 'Guardar',
+            ->add('roles', EntityType::class, [
+                'class' => roles::class,
+                'choice_label' => 'nombre',
+                'expanded' => true,
+                'multiple' => true,
+                'required' => false,
+                'attr' => ['class' => 'form-check'],
             ])
             ->getForm();
 
@@ -153,6 +197,8 @@ class EmpleadosController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em->flush();
+
+            $this->addFlash('success', 'Empleado editado exitosamente.');
 
             return $this->redirectToRoute('empleados_index');
         }
@@ -163,7 +209,7 @@ class EmpleadosController extends Controller
     }
 
     /**
-     * @Route("/empleado/{id}/delete", name="empleados_delete")
+     * @Route("/empleados/{id}/delete", name="empleados_delete", methods={"DELETE"})
      */
     public function deleteAction(Request $request, $id)
     {
@@ -171,18 +217,14 @@ class EmpleadosController extends Controller
         $empleado = $em->getRepository(empleados::class)->find($id);
 
         if (!$empleado) {
-            throw $this->createNotFoundException('Empleado no encontrado');
+            return new JsonResponse(['success' => 'Empleado no encontrado.']);
         }
 
-        if ($request->isMethod('POST')) {
+        if ($request->isXmlHttpRequest()) {
             $em->remove($empleado);
             $em->flush();
 
-            return $this->redirectToRoute('empleados_index');
+            return new JsonResponse(['success' => 'Empleado eliminado exitosamente.']);
         }
-
-        return $this->render('empleados/delete.html.twig', [
-            'empleado' => $empleado,
-        ]);
     }
 }

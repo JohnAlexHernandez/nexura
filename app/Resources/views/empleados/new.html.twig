@@ -3,43 +3,133 @@
 {% block title %}Crear empleado{% endblock %}
 
 {% block body %}
-<h1>Crear empleado</h1>
-    {{ form_start(form) }}
-    <div>
-        {{ form_label(form.nombre) }}
-        {{ form_widget(form.nombre) }}
-    </div>
-    <br>
-    
-    <div>
-        {{ form_label(form.email) }}
-        {{ form_widget(form.email) }}
-    </div>
-    <br>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-8">
+                <h1 class="mb-4">Crear empleado</h1>
+                {{ form_start(form, {'attr': {'id': 'formulario'}}) }}
+                <div class="mb-3">
+                    {{ form_label(form.nombre, null, {'attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.nombre, {'attr': {'class': form_errors(form.nombre) ? 'form-control is-invalid' : 'form-control'}}) }}
+                    <div class="invalid-feedback">
+                        {{ form_errors(form.nombre) }}
+                    </div>
+                </div>
+                <br>
 
-    <div>
-        {{ form_label(form.area) }}
-        {{ form_widget(form.area) }}
+                <div class="mb-3">
+                    {{ form_label(form.email, null, {'attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.email, {'attr': {'class': form_errors(form.email) ? 'form-control is-invalid' : 'form-control'}}) }}
+                    <div class="invalid-feedback">
+                        {{ form_errors(form.email) }}
+                    </div>
+                </div>
+                <br>
+
+                <div class="mb-3">
+                    {{ form_label(form.area, null, {'attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.area, {'attr': {'class': form_errors(form.area) ? 'form-control is-invalid' : 'form-control'}}) }}
+                    <div class="invalid-feedback">
+                        {{ form_errors(form.area) }}
+                    </div>
+                </div>
+                <br>
+
+                <div class="mb-3">
+                    {{ form_label(form.sexo, null, {'attr': {'class': 'form-label'}}) }}
+                    {% for child in form.sexo %}
+                        <div class="form-check">
+                            {{ form_widget(child, {'attr': {'class': 'form-check-input ' ~ (form_errors(form.sexo) ? 'is-invalid' : '')}}) }}
+                            {{ form_label(child, null, {'attr': {'class': 'form-check-label'}}) }}
+                        </div>
+                    {% endfor %}
+                    {{ form_errors(form.sexo) }}
+                </div>
+                <br>
+
+                <div class="mb-3">
+                    {{ form_label(form.descripcion, null, {'attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.descripcion, {'attr': {'class': form_errors(form.descripcion) ? 'form-control is-invalid' : 'form-control'}}) }}
+                    <div class="invalid-feedback">
+                        {{ form_errors(form.descripcion) }}
+                    </div>
+                </div>
+                <br>
+
+                <div class="mb-3">
+                    {{ form_label(form.boletin, null, {'attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.boletin) }}
+                    <span>Deseo recibir boletín informativo</span>
+                </div>
+                <br>
+
+                <div class="mb-3">
+                {{ form_label(form.roles, null, {'attr': {'class': 'form-label'}}) }}
+
+                {% for child in form.roles %}
+                    <div class="form-check">
+                        {{ form_widget(child, {'attr': {'class': form_errors(form.descripcion) ? 'form-check-input is-invalid' : 'form-check-input'}}) }}
+                        {{ form_label(child, null, {'attr': {'class': 'form-check-label'}}) }}
+                    </div>
+                {% endfor %}
+                {{ form_errors(form.roles) }}
+                </div>
+                <br>
+
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                {{ form_end(form) }}
+            </div>
+        </div>
     </div>
-    <br>
-    
-    <div>
-        {{ form_label(form.sexo) }}
-        {{ form_widget(form.sexo) }}
-    </div>
-    <br>
-    
-    <div>
-        {{ form_label(form.descripcion) }}
-        {{ form_widget(form.descripcion) }}
-    </div>
-    <br>
-    
-    <div>
-        {{ form_label(form.boletin) }}
-        {{ form_widget(form.boletin) }}
-        <span>Suscribirse al boletín</span>
-    </div>
-    <br>
-    {{ form_end(form) }}
+
+    <script>
+        $(document).ready(function() {
+            $("#formulario").validate({
+                rules: {
+                    nombre: {
+                        required: true,
+                        regex: /^[\p{L}\s]+$/u
+                    },
+                    email: {
+                        required: true,
+                        email: true
+                    },
+                    area: {
+                        required: true
+                    }
+                    sexo: {
+                        required: true
+                    },
+                    descripcion: {
+                        required: true
+                    },
+                    roles: {
+                        hasValue: true
+                    }
+                },
+                messages: {
+                    nombre: {
+                        required: "El nombre no puede estar vacío.",
+                        regex: "El nombre solo puede contener letras y espacios."
+                    },
+                    email: {
+                        required: "El correo electrónico no puede estar vacío.",
+                        email: "El correo electrónico debe ser válido."
+                    },
+                    area: {
+                        required: "Debe seleccionar una área."
+                    },
+                    sexo: {
+                        required: "El sexo no puede estar vacío."
+                    },
+                    descripcion: {
+                        required: "La descripción no puede estar vacía."
+                    },
+                    roles: {
+                        hasValue: "Debe seleccionar al menos un rol."
+                    }
+                }
+            });
+        });
+    </script>
 {% endblock %}

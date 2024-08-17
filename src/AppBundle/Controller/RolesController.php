@@ -4,8 +4,8 @@ namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\roles;
 
@@ -34,7 +34,6 @@ class RolesController extends Controller
             ->add('nombre', TextType::class, [
                 'label' => 'Nombre rol', 
             ])
-            ->add('save', SubmitType::class, array('label' => 'Guardar'))
             ->getForm();
 
         $form->handleRequest($request);
@@ -43,6 +42,8 @@ class RolesController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($rol);
             $em->flush();
+
+            $this->addFlash('success', 'Rol creado exitosamente.');
 
             return $this->redirectToRoute('roles_index');
         }
@@ -61,15 +62,13 @@ class RolesController extends Controller
         $rol = $em->getRepository(roles::class)->find($id);
 
         if (!$rol) {
-            throw $this->createNotFoundException('Rol no encontrado');
+            $this->addFlash('error', 'Rol no encontrado.');
+            return $this->redirectToRoute('roles_index');
         }
 
         $form = $this->createFormBuilder($rol)
             ->add('nombre', TextType::class, [
                 'label' => 'Nombre rol',
-            ])
-            ->add('save', SubmitType::class, [
-                'label' => 'Guardar',
             ])
             ->getForm();
 
@@ -77,6 +76,8 @@ class RolesController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em->flush();
+
+            $this->addFlash('success', 'Rol editado exitosamente.');
 
             return $this->redirectToRoute('roles_index');
         }
@@ -87,7 +88,7 @@ class RolesController extends Controller
     }
 
     /**
-     * @Route("/roles/{id}delete", name="roles_delete")
+     * @Route("/roles/{id}delete", name="roles_delete", methods={"DELETE"})
      */
     public function deleteAction(Request $request, $id)
     {
@@ -95,19 +96,15 @@ class RolesController extends Controller
         $rol = $em->getRepository(roles::class)->find($id);
 
         if (!$rol) {
-            throw $this->createNotFoundException('Rol no encontrado');
+            return new JsonResponse(['success' => 'Rol no encontrado.']);
         }
 
-        if ($request->isMethod('POST')) {
+        if ($request->isXmlHttpRequest()) {
             $em->remove($rol);
             $em->flush();
 
-            return $this->redirectToRoute('roles_index');
+            return new JsonResponse(['success' => 'Rol eliminado exitosamente.']);
         }
-
-        return $this->render('roles/delete.html.twig', [
-            'rol' => $rol,
-        ]);
     }
 
 }

@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Lista de roles{% endblock %}
+{% block title %}Lista de areas{% endblock %}
 
 {% block body %}
     <div class="container">
-        <h1>Lista de roles</h1>
+        <h1>Lista de areas</h1>
 
         <div id="alerts" class="container mt-3"></div>
 
@@ -21,13 +21,13 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         {% endfor %}
-
+        
         <div class="text-end">
             <a href="{{ path('empleados_index') }}" class="btn btn-secondary btn-sm">
                 <i class="fas fa-arrow-left"></i> Volver a Empleados
             </a>
 
-            <a href="{{ path('roles_new') }}" class="btn btn-primary btn-sm">
+            <a href="{{ path('areas_new') }}" class="btn btn-primary btn-sm">
                 <i class="fas fa-user-plus"></i> Crear
             </a>
         </div>
@@ -42,16 +42,16 @@
                 </tr>
             </thead>
             <tbody>
-                {% for rol in roles %}
+                {% for area in areas %}
                     <tr class="text-center">
-                        <td>{{ rol.nombre }}</td>
+                        <td>{{ area.nombre }}</td>
                         <td>
-                            <a href="{{ path('roles_edit', { 'id': rol.id }) }}" class="btn btn-sm">
+                            <a href="{{ path('areas_edit', { 'id': area.id }) }}" class="btn btn-sm">
                                 <i class="fas fa-edit"></i>
                             </a>
                         </td>
                         <td>
-                            <a href="#" class="btn btn-sm btn-delete" data-url="{{ path('roles_delete', { 'id': rol.id }) }}">
+                            <a href="#" class="btn btn-sm btn-delete" data-url="{{ path('areas_delete', { 'id': area.id }) }}">
                                 <i class="fas fa-trash-alt"></i>
                             </a>
                         </td>
@@ -64,5 +64,5 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('js/roles.js') }}"></script>
+    <script src="{{ asset('js/areas.js') }}"></script>
 {% endblock %}

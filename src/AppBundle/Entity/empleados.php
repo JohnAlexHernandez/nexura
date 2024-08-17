@@ -4,7 +4,10 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Entity\areas;
+use AppBundle\Entity\roles;
 
 /**
  * empleados
@@ -25,6 +28,11 @@ class empleados
 
     /**
      * @var string
+     * @Assert\NotBlank(message="El nombre no puede estar vacío.")
+     * @Assert\Regex(
+     *     pattern="/^[\p{L}\s]+$/u",
+     *     message="El nombre solo puede contener letras y espacios."
+     * )
      *
      * @ORM\Column(name="nombre", type="string", length=255)
      */
@@ -34,6 +42,8 @@ class empleados
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=255)
+     * @Assert\NotBlank(message="El correo electrónico no puede estar vacío.")
+     * @Assert\Email(message="El correo electrónico '{{ value }}' no es válido.")
      */
     private $email;
 
@@ -41,6 +51,8 @@ class empleados
      * @var string
      *
      * @ORM\Column(name="sexo", type="string", length=1)
+     * @Assert\Choice(choices={"M", "F"})
+     * @Assert\NotBlank(message="El sexo no puede estar vacío.")
      */
     private $sexo;
 
@@ -55,12 +67,14 @@ class empleados
      * @var string
      *
      * @ORM\Column(name="descripcion", type="text")
+     * * @Assert\NotBlank(message="La descripción no puede estar vacía.")
      */
     private $descripcion;
 
     /**
      * @ORM\ManyToOne(targetEntity="areas")
      * @ORM\JoinColumn(name="area_id", referencedColumnName="id", nullable=false)
+     * @Assert\NotBlank(message="Debe seleccionar una área.")
      */
     private $area;
 
@@ -70,6 +84,7 @@ class empleados
      *      joinColumns={@ORM\JoinColumn(name="empleado_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="rol_id", referencedColumnName="id")}
      * )
+     * @Assert\Count(min=1, minMessage="Debe seleccionar al menos un rol.")
      */
     private $roles;
 
@@ -222,7 +237,7 @@ class empleados
     /**
      * Set area.
      *
-     * @param Area $area
+     * @param areas $area
      *
      * @return Empleado
      */
@@ -233,11 +248,22 @@ class empleados
         return $this;
     }
 
-    public function getRoles(): ArrayCollection
+    /**
+     * @return Collection|roles[]
+     */
+    public function getRoles(): Collection
     {
         return $this->roles;
     }
 
+    /**
+     * addRole
+     * 
+     * @param roles $role
+     *
+     * @return Empleado
+     * 
+     */
     public function addRole(roles $role): self
     {
         if (!$this->roles->contains($role)) {
@@ -247,6 +273,14 @@ class empleados
         return $this;
     }
 
+    /**
+     * removeRole
+     * 
+     * @param roles $role
+     *
+     * @return Empleado
+     * 
+     */
     public function removeRole(roles $role): self
     {
         $this->roles->removeElement($role);

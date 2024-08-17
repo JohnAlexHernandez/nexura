@@ -3,36 +3,82 @@
 {% block title %}Lista de empleados{% endblock %}
 
 {% block body %}
-    <h1>Lista de empleados</h1>
-    <a href="{{ path('empleados_new') }}">Crear</a>
-    <table>
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Email</th>
-                <th>Sexo</th>
-                <th>Area</th>
-                <th>Boletin</th>
-                <th>Modificar</th>
-                <th>Eliminar</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for empleado in empleados %}
-                <tr>
-                    <td>{{ empleado.nombre }}</td>
-                    <td>{{ empleado.email }}</td>
-                    <td>{{ empleado.sexo }}</td>
-                    <td>{{ empleado.area.nombre }}</td>
-                    <td>{{ empleado.boletin }}</td>
-                    <td>
-                        <a href="{{ path('empleados_edit', { 'id': empleado.id }) }}">Editar</a>
-                    </td>
-                    <td>
-                        <a href="{{ path('empleados_delete', { 'id': empleado.id }) }}" onclick="return confirm('¿Estás seguro?');">Eliminar</a>
-                    </td>
+    <div class="container">
+        <h1>Lista de empleados</h1>
+
+        <div id="alerts" class="container mt-3"></div>
+
+        {% for message in app.session.flashbag.get('success') %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+
+        {% for message in app.session.flashbag.get('error') %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+
+        <div class="text-end">
+            <a href="{{ path('empleados_new') }}" class="btn btn-primary btn-sm">
+                <i class="fas fa-user-plus"></i> Crear
+            </a>
+            <a href="{{ path('areas_index') }}" class="btn btn-secondary btn-sm">
+                <i class="fas fa-sitemap"></i> Administrar Áreas
+            </a>
+            <a href="{{ path('roles_index') }}" class="btn btn-secondary btn-sm">
+                <i class="fas fa-user-shield"></i> Administrar Roles
+            </a>
+        </div>
+        <br>
+
+        <table class="table table-striped table-responsive-sm">
+            <thead>
+                <tr class="text-center">
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Sexo</th>
+                    <th>Area</th>
+                    <th>Boletin</th>
+                    <th>Modificar</th>
+                    <th>Eliminar</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for empleado in empleados %}
+                    <tr class="text-center">
+                        <td>{{ empleado.nombre }}</td>
+                        <td>{{ empleado.email }}</td>
+                        <td>{{ empleado.sexo }}</td>
+                        <td>{{ empleado.area.nombre }}</td>
+                        <td>
+                            {% if empleado.boletin %}
+                                Si
+                            {% else %}
+                                No
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ path('empleados_edit', { 'id': empleado.id }) }}" class="btn btn-sm">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="#" class="btn btn-sm btn-delete" data-url="{{ path('empleados_delete', { 'id': empleado.id }) }}">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/empleados.js') }}"></script>
 {% endblock %}
